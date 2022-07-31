@@ -1,5 +1,6 @@
 package limonblaze.originsclasses.common.registry;
 
+import com.google.common.collect.Sets;
 import io.github.edwinmindcraft.apoli.api.power.factory.BiEntityCondition;
 import io.github.edwinmindcraft.apoli.api.power.factory.BlockCondition;
 import io.github.edwinmindcraft.apoli.api.power.factory.EntityCondition;
@@ -17,9 +18,18 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.SpongeBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static net.minecraftforge.common.ToolActions.*;
 
 public class OriginsClassesConditions {
 
@@ -33,13 +43,58 @@ public class OriginsClassesConditions {
 
     public static final DeferredRegister<ItemCondition<?>> ITEM_CONDITIONS = DeferredRegister.create(ApoliRegistries.ITEM_CONDITION_KEY, OriginsClasses.MODID);
     public static final RegistryObject<SimpleItemCondition> MELEE = ITEM_CONDITIONS.register("melee", () ->
-        new SimpleItemCondition(Enchantments.SHARPNESS::canEnchant));
+        new SimpleItemCondition( stack ->
+                (
+                        stack.getDescriptionId().equals("item.tetra.modular_single") ||
+                        stack.getDescriptionId().equals("item.tetra.modular_double") ||
+                        Enchantments.SHARPNESS.canEnchant(stack)
+                )));
+    public static final RegistryObject<SimpleItemCondition> SWORD = ITEM_CONDITIONS.register("sword", () ->
+            new SimpleItemCondition( stack ->
+                    (
+                            stack.getDescriptionId().equals("tetra:modular_sword") ||
+                            Enchantments.SHARPNESS.canEnchant(stack) && !Enchantments.BLOCK_EFFICIENCY.canEnchant(stack)
+                    )));
     public static final RegistryObject<SimpleItemCondition> RANGE = ITEM_CONDITIONS.register("range", () ->
-        new SimpleItemCondition(stack -> stack.getItem() instanceof ProjectileWeaponItem));
+        new SimpleItemCondition( stack ->
+                (
+                        stack.getDescriptionId().equals("item.tetra.modular_bow") ||
+                        stack.getDescriptionId().equals("item.tetra.modular_crossbow") ||
+                        stack.getItem() instanceof ProjectileWeaponItem
+                )));
+    public static final RegistryObject<SimpleItemCondition> HOE = ITEM_CONDITIONS.register("hoe", () ->
+            new SimpleItemCondition( stack ->
+                    (
+                            stack.canPerformAction(HOE_DIG)
+                   )));
+    public static final RegistryObject<SimpleItemCondition> PICKAXE = ITEM_CONDITIONS.register("pickaxe", () ->
+            new SimpleItemCondition( stack ->
+                    (
+                            stack.canPerformAction(PICKAXE_DIG)
+                    )));
+    public static final RegistryObject<SimpleItemCondition> AXE = ITEM_CONDITIONS.register("axe", () ->
+            new SimpleItemCondition( stack ->
+                    (
+                            stack.canPerformAction(AXE_DIG)
+                    )));
+    public static final RegistryObject<SimpleItemCondition> SHOVEL = ITEM_CONDITIONS.register("shovel", () ->
+            new SimpleItemCondition( stack ->
+                    (
+                            stack.canPerformAction(SHOVEL_DIG)
+                    )));
     public static final RegistryObject<SimpleItemCondition> TOOL = ITEM_CONDITIONS.register("tool", () ->
-        new SimpleItemCondition(stack -> stack.getItem() instanceof DiggerItem || stack.getItem() instanceof ShearsItem));
+        new SimpleItemCondition( stack ->
+                (
+                        stack.getDescriptionId().equals("item.tetra.modular_single") ||
+                        stack.getDescriptionId().equals("item.tetra.modular_double") ||
+                        stack.getItem() instanceof DiggerItem ||
+                        stack.getItem() instanceof ShearsItem
+                )));
     public static final RegistryObject<SimpleItemCondition> SHIELD = ITEM_CONDITIONS.register("shield", () ->
-        new SimpleItemCondition(stack -> stack.getItem() instanceof ShieldItem));
+        new SimpleItemCondition(stack -> (
+                stack.getDescriptionId().equals("item.tetra.modular_shield") ||
+                stack.getItem() instanceof ShieldItem
+        )));
     public static final RegistryObject<SimpleItemCondition> HELMET = ITEM_CONDITIONS.register("helmet", () ->
         new SimpleItemCondition(stack -> stack.getItem() instanceof ArmorItem armor && armor.getSlot() == EquipmentSlot.HEAD));
     public static final RegistryObject<SimpleItemCondition> CHESTPLATE = ITEM_CONDITIONS.register("chestplate", () ->

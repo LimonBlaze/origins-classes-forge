@@ -26,7 +26,8 @@
     "compat.apoli.ModifyFoodPowerMixin",
     "compat.apotheosis.ApotheosisEnchantmentMenuMixin",
     "compat.farmersdelight.CookingPotResultSlotMixin",
-    "compat.farmersdelight.SkilletItemMixin"
+    "compat.farmersdelight.SkilletItemMixin",
+    "compat.tetra.WorkbenchTileMixin"
   ],
   "client": [
     "client.ClientSideMerchantMixin",
